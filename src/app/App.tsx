@@ -31,6 +31,23 @@ interface Car {
   badge?: string;
   rating: number;
   trims: Trim[];
+  generation?: GenerationData[];
+  specs: {
+    engine: string;
+    transmission: string;
+    drivetrain: string;
+    economy: string;
+    fuelType: string;
+    
+    
+  };
+}
+interface GenerationData{
+  id: string;
+  label: string;
+  estimatedYear: number;
+  image : string;
+  unavailableTrims? : string[],
   specs: {
     engine: string;
     transmission: string;
@@ -46,9 +63,85 @@ const CARS: Car[] = [
     brand: "Toyota",
     model: "Camry",
     year: 2026,
-    image: "https://www.goodcarbadcar.net/wp-content/uploads/2025/05/2026_Camry_XSE_AWD_HeavyMetalBlackRoof_001-1500x990-1.jpg",
+    image: "https://phantom.estaticos-marca.com/54597bf300089330bb0dd240628f5dca/crop/0x0/1978x1318/resize/1320/f/jpg/assets/multimedia/imagenes/2026/03/05/17726740367584.png",
     badge: "Popular",
     rating: 4.9,
+    generation: [
+      {
+    id: "camry-xv80",
+    label: "2025-Present XV80",
+    estimatedYear: 2026,
+    image: "https://phantom.estaticos-marca.com/54597bf300089330bb0dd240628f5dca/crop/0x0/1978x1318/resize/1320/f/jpg/assets/multimedia/imagenes/2026/03/05/17726740367584.png",
+    specs: {
+      engine: "2.5L Inline-4 Hybrid",
+      transmission: "E-CVT automatic transmission",
+      drivetrain: "FWD or AWD",
+      economy: "45 / 47 mpg",
+      fuelType: "Gasoline Hybrid",
+    },
+  },
+      
+       {
+    id: "camry-xv70",
+    label: "2018-2024 XV70",
+    estimatedYear: 2019,
+    image: "https://tse1.mm.bing.net/th/id/OIP.cZmJI8AfjtES3CFjlzYpAQHaEY?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+    specs: {
+      engine: "2.5L I4 Gasoline/Hybrid or 3.5L V6 Gasoline",
+      transmission: "8-Speed automatic",
+      drivetrain: "FWD or AWD",
+      economy: "28 / 39 mpg",
+      fuelType: "Gasoline",
+    },
+  },
+  {
+    id:"camry-xv60",
+    label: "2015-2017 XV60",
+    estimatedYear: 2015,
+    image:"https://tractionlife.com/wp-content/uploads/2014/10/2015-toyota-camry-review-2-of-25.jpg",
+    specs:{
+      engine:"2.5L I4 Gasoline/Hybrid or 3.5 V6 Gasoline",
+      transmission:"6-Speed automatic",
+      drivetrain:"FWD",
+      economy: "24 / 33 mpg",
+      fuelType: "Gasoline"
+    }
+  },
+  {
+     id: "camry-xv50",
+    label: "2012-2014 XV50",
+    estimatedYear: 2013,
+    image: "https://images.cars.com/cldstatic/wp-content/uploads/1325156035-1425510327145.jpeg",
+    unavailableTrims: ["XSE"],
+    specs: {
+      engine: "2.5L I4 Gasoline/Hybrid or 3.5 V6 Gasoline",
+      transmission: "6-Speed automatic",
+      drivetrain: "FWD",
+      economy: "25 / 35 mpg",
+      fuelType: "Gasoline" ,
+    },
+    
+  },
+  {
+  id: "camry-xv40",
+  label: "2007-2011 XV40",
+  estimatedYear: 2009,
+  image: "https://th.bing.com/th/id/R.aaba096d63dc8ad6d785461074d2833a?rik=rNHhWe71OAtcrg&riu=http%3a%2f%2fcarspecmn.com%2fwp-content%2fuploads%2f2015%2f02%2fToyotaCamry2007.jpg&ehk=bG8Cv8UBREDB9kc1qSv5M5Oc08Or%2bsLCjH%2brbXs6aQ0%3d&risl=&pid=ImgRaw&r=0",
+  unavailableTrims: ["XSE"],
+  specs: {
+    engine: "2.4L Inline-4 Gasoline or 3.5 V6 Gasoline",
+    transmission: "5-speed automatic",
+    drivetrain: "FWD",
+    economy: "21 / 31 mpg",
+    fuelType: "Gasoline",
+  },
+},
+  
+  
+],
+        
+      
+    
     trims: [
       { name: "LE", price: 29000, hp: 225, totalMonthly: "$300-$500" },
       { name: "SE", price: 31000, hp: 225, totalMonthly: "$320-$530" },
@@ -72,6 +165,71 @@ const CARS: Car[] = [
     image: "https://media.ed.edmunds-media.com/honda/civic/2026/oem/2026_honda_civic_sedan_si_fq_oem_1_1280.jpg",
     badge: "Efficient",
     rating: 4.8,
+    
+    generation: [
+      {
+    id: "civic-11th-gen",
+    label: "2022-2026 11th Gen",
+    estimatedYear: 2024,
+    image: "https://media.ed.edmunds-media.com/honda/civic/2026/oem/2026_honda_civic_sedan_si_fq_oem_1_1280.jpg",
+    unavailableTrims: [],
+    specs: {
+      engine: "2.0L Inline-4 or 1.5L Turbo Inline-4",
+      transmission: "CVT automatic",
+      drivetrain: "FWD",
+      economy: "31 / 40 mpg",
+      fuelType: "Gasoline",
+    },
+  },
+   {
+    id: "civic-10th-gen",
+    label: "2016-2021 10th Gen",
+    estimatedYear: 2019,
+    image: "https://autonxt.net/wp-content/uploads/2019/12/2020-Honda-Civic-Si32.jpg",
+    unavailableTrims: [],
+    specs: {
+      engine: "2.0L Inline-4 or 1.5L Turbo Inline-4",
+      transmission: "CVT automatic",
+      drivetrain: "FWD",
+      economy: "30 / 38 mpg",
+      fuelType: "Gasoline",
+    },
+  },
+ 
+  {
+    id: "civic-9th-gen",
+    label: "2012-2015 9th Gen",
+    estimatedYear: 2014,
+    image: "https://cdn.wallpapersafari.com/49/66/j0zaxP.jpg",
+    unavailableTrims: ["Sport", "Touring"],
+    specs: {
+      engine: "1.8L Inline-4 Gasoline",
+      transmission: "5-speed automatic or CVT",
+      drivetrain: "FWD",
+      economy: "28 / 39 mpg",
+      fuelType: "Gasoline",
+    },
+  },
+ 
+  
+  {
+    id: "civic-8th-gen",
+    label: "2006-2011 8th Gen",
+    estimatedYear: 2009,
+    image: "https://file.kelleybluebookimages.com/kbb/base/house/2010/2010-Honda-Civic-FrontSide_HOCIVSISED101_505x375.jpg?interpolation=high-quality&downsize=600:*",
+    unavailableTrims: ["Sport", "Touring"],
+    specs: {
+      engine: "1.8L Inline-4 Gasoline",
+      transmission: "5-speed automatic",
+      drivetrain: "FWD",
+      economy: "25 / 36 mpg",
+      fuelType: "Gasoline",
+    },
+  },
+],
+
+      
+    
     trims: [
       { name: "LX", price: 25000, hp: 150, totalMonthly: "$280-$460" },
       { name: "Sport", price: 27000, hp: 150, totalMonthly: "$300-$490" },
@@ -96,6 +254,67 @@ const CARS: Car[] = [
     image: "https://tse2.mm.bing.net/th/id/OIP.jpmBgWUzOsBXeBHwzLCmpQAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
     badge: "Family Pick",
     rating: 4.8,
+    generation: [
+      {
+    id: "accord-11th-gen",
+    label: "2023-Present 11th Gen",
+    estimatedYear: 2024,
+    image: "https://tse2.mm.bing.net/th/id/OIP.jpmBgWUzOsBXeBHwzLCmpQAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+    unavailableTrims: [],
+    specs: {
+      engine: "1.5L Turbo I4 / 2.0L Hybrid",
+      transmission: "CVT / e-CVT automatic",
+      drivetrain: "FWD",
+      economy: "29 / 37 mpg or 51 / 44 mpg hybrid",
+      fuelType: "Gasoline / Hybrid",
+    },
+  },
+  {
+    id: "accord-10th-gen",
+    label: "2018-2022 10th Gen",
+    estimatedYear: 2020,
+    image: "https://media.ed.edmunds-media.com/honda/accord/2018/oem/2018_honda_accord_sedan_sport_fq_oem_10_815.jpg",
+    unavailableTrims: [],
+    specs: {
+      engine: "1.5L Turbo I4 / 2.0L Turbo Inline-4 / Hybrid",
+      transmission: "CVT or 10-speed automatic / e-CVT Hybrid",
+      drivetrain: "FWD",
+      economy: "30 / 38 mpg or higher with hybrid",
+      fuelType: "Gasoline",
+    },
+  },
+  
+  
+  {
+    id: "accord-9th-gen",
+    label: "2013-2017 9th Gen",
+    estimatedYear: 2015,
+    image: "https://wallpaperaccess.com/full/5490979.jpg",
+    unavailableTrims: [],
+    specs: {
+      engine: "2.4L I4 Gasoline / 3.5 V6 Gasoline / Hybrid",
+      transmission: "CVT, 6-Speed automatic / 6-Speed Manual",
+      drivetrain: "FWD",
+      economy: "27 / 36 mpg or lower with V6",
+      fuelType: "Gasoline",
+    },
+  },
+  {
+    id: "accord-8th-gen",
+    label: "2008-2012 8th Gen",
+    estimatedYear: 2010,
+    image: "https://tse3.mm.bing.net/th/id/OIP.Oig3vPJuxXoIeEVSQTfkIwAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+    unavailableTrims: ["Sport", "Touring"],
+    specs: {
+      engine: "2.4L I4 Gasoline / 3.5L V6 Gasoline",
+      transmission: "5-speed automatic",
+      drivetrain: "FWD",
+      economy: "23 / 34 mpg or lower with V6",
+      fuelType: "Gasoline",
+    },
+  },
+  
+],
     trims: [
       { name: "LX", price: 29000, hp: 192, totalMonthly: "$320-$520" },
       { name: "EX", price: 31000, hp: 192, totalMonthly: "$340-$550" },
@@ -120,6 +339,78 @@ const CARS: Car[] = [
     image: "https://pressroom.toyota.com/wp-content/uploads/2025/07/Thumbnail_2026_Corolla_XSE_WindChillPearl_EXT_B_ROLL-1500x900.png",
     badge: "Low Cost",
     rating: 4.7,
+    generation: [
+  {
+    id: "corolla-12th-gen",
+    label: "2020-2026 12th Gen",
+    estimatedYear: 2023,
+    image: "https://pressroom.toyota.com/wp-content/uploads/2025/07/Thumbnail_2026_Corolla_XSE_WindChillPearl_EXT_B_ROLL-1500x900.png",
+    unavailableTrims: [],
+    specs: {
+      engine: "2.0L I4 Gasoline or 1.8L I4 Hybrid",
+      transmission: "CVT automatic",
+      drivetrain: "FWD or AWD Hybrid",
+      economy: "32 / 41 mpg or higher with Hybrid",
+      fuelType: "Gasoline / Hybrid",
+    },
+  },
+  {
+    id: "corolla-11th-gen",
+    label: "2014-2019 11th Gen",
+    estimatedYear: 2016,
+    image: "https://cdn-fastly.autoguide.com/media/2023/06/26/12909058/2018-toyota-corolla-review.jpg?size=414x575&nocrop=1",
+    unavailableTrims: ["Hybrid"],
+    specs: {
+      engine: "1.8L I4 Gasoline",
+      transmission: "CVT automatic or 6-speed manual",
+      drivetrain: "FWD",
+      economy: "28 / 36 mpg",
+      fuelType: "Gasoline",
+    },
+  },
+  {
+    id: "corolla-10th-gen",
+    label: "2009-2013 10th Gen",
+    estimatedYear: 2011,
+    image: "https://static0.carbuzzimages.com/wordpress/wp-content/uploads/2025/01/2009-2010-toyota-corolla-xrs-front-3_4.jpg?q=50&fit=crop&w=480&dpr=1.5",
+    unavailableTrims: ["Hybrid", "XSE"],
+    specs: {
+      engine: "1.8L I4 or 2.4L I4 Gasoline",
+      transmission: "4-speed automatic or 5-speed manual",
+      drivetrain: "FWD",
+      economy: "27 / 34 mpg",
+      fuelType: "Gasoline",
+    },
+  },
+  {
+    id: "corolla-9th-gen",
+    label: "2004-2008 9th Gen",
+    estimatedYear: 2006,
+    image: "https://www.hongliyangzhi.com/manufacturers/toyota/toyota-corolla/toyota-corolla-xrs-2005/toyota-corolla-xrs-2005-7.jpg",
+    unavailableTrims: ["Hybrid", "SE", "XSE"],
+    specs: {
+      engine: "1.8L I4 Gasoline",
+      transmission: "4-speed automatic or 5-speed manual",
+      drivetrain: "FWD",
+      economy: "26 / 35 mpg",
+      fuelType: "Gasoline",
+    },
+  },
+  {
+    id: "corolla-8th-gen",
+    label: "1998-2003 Older Gen",
+    estimatedYear: 2001,
+    image: "https://global.toyota/pages/corolla50th/gallery/images/oversea/small/18_9th_Gen_Corolla_2003_2008_s.jpg",
+    unavailableTrims: ["Hybrid", "SE", "XSE"],
+    specs: {
+      engine: "1.8L I4 Gasoline",
+      transmission: "4-speed automatic or 5-speed manual",
+      drivetrain: "FWD",
+      economy: "28 / 37 mpg",
+      fuelType: "Gasoline",
+    },
+  },
+],
     trims: [
       { name: "LE", price: 23000, hp: 169, totalMonthly: "$260-$430" },
       { name: "SE", price: 25000, hp: 169, totalMonthly: "$280-$460" },
@@ -144,6 +435,94 @@ const CARS: Car[] = [
     image: "https://www.examiner.com.au/images/transform/v1/crop/frm/silverstone-feed-data/6a30c655-90f6-4cb5-b0ec-2404e8ce1e92.jpg/r0_0_1490_790_w1200_h678_fmax.jpg",
     badge: "SUV Pick",
     rating: 4.8,
+   
+    generation: [
+  {
+    id: "rav4-6th-gen",
+    label: "2026-Present 6th Gen",
+    estimatedYear: 2026,
+    image: "https://www.examiner.com.au/images/transform/v1/crop/frm/silverstone-feed-data/6a30c655-90f6-4cb5-b0ec-2404e8ce1e92.jpg/r0_0_1490_790_w1200_h678_fmax.jpg",
+    unavailableTrims: [],
+    specs: {
+      engine: "2.5L I4 Hybrid or Plug-in Hybrid",
+      transmission: "E-CVT automatic",
+      drivetrain: "FWD or AWD",
+      economy: "Hybrid / Plug-in Hybrid estimate",
+      fuelType: "Hybrid / Plug-in Hybrid",
+    },
+  },
+  {
+    id: "rav4-5th-gen",
+    label: "2019-2025 5th Gen",
+    estimatedYear: 2022,
+    image: "https://images.drive.com.au/driveau/image/upload/c_fill,f_auto,g_auto,h_674,q_auto:eco,w_1200/cms/uploads/y80ho64pomaqgvtxlez5",
+    unavailableTrims: [],
+    specs: {
+      engine: "2.5L I4 Gasoline / Hybrid / Plug-in Hybrid",
+      transmission: "8-speed automatic or E-CVT hybrid",
+      drivetrain: "FWD or AWD",
+      economy: "27 / 35 mpg or higher with Hybrid",
+      fuelType: "Gasoline / Hybrid / Plug-in Hybrid",
+    },
+  },
+  {
+    id: "rav4-4th-gen",
+    label: "2013-2018 4th Gen",
+    estimatedYear: 2016,
+    image: "https://www.kbb.com/wp-content/uploads/2020/12/2018-toyota-rav4-front-3qtr.jpg?w=757",
+    unavailableTrims: ["Hybrid XSE"],
+    specs: {
+      engine: "2.5L I4 Gasoline or Hybrid",
+      transmission: "6-speed automatic or E-CVT hybrid",
+      drivetrain: "FWD or AWD",
+      economy: "23 / 30 mpg or higher with Hybrid",
+      fuelType: "Gasoline / Hybrid",
+    },
+  },
+  {
+    id: "rav4-3rd-gen",
+    label: "2006-2012 3rd Gen",
+    estimatedYear: 2009,
+    image: "https://media.ed.edmunds-media.com/toyota/rav4/2012/oem/2012_toyota_rav4_4dr-suv_sport_fq_oem_5_815.jpg",
+    unavailableTrims: ["Adventure", "Hybrid XSE"],
+    specs: {
+      engine: "2.5L I4 or 3.5L V6 Gasoline",
+      transmission: "4-speed or 5-speed automatic",
+      drivetrain: "FWD or AWD",
+      economy: "22 / 28 mpg or lower with V6",
+      fuelType: "Gasoline",
+    },
+  },
+  {
+    id: "rav4-2nd-gen",
+    label: "2001-2005 2nd Gen",
+    estimatedYear: 2003,
+    image: "https://th.bing.com/th/id/R.18c0e3c4212c0fbbf3bdda4012a150b9?rik=A1JbUndzTpqfaQ&riu=http%3a%2f%2fimages.thecarconnection.com%2flrg%2f2005_toyota_rav4_100008160_l.jpg&ehk=Ao%2fMO56bbDlcFdbBQpCi3GTayLhjoixltc3bGoVkTFE%3d&risl=&pid=ImgRaw&r=0",
+    unavailableTrims: ["Adventure", "Hybrid XSE"],
+    specs: {
+      engine: "2.0L I4 or 2.4L I4 Gasoline",
+      transmission: "4-speed automatic or 5-speed manual",
+      drivetrain: "FWD or AWD",
+      economy: "22 / 27 mpg",
+      fuelType: "Gasoline",
+    },
+  },
+  {
+    id: "rav4-1st-gen",
+    label: "1996-2000 1st Gen",
+    estimatedYear: 1998,
+    image: "https://img.carswp.com/toyota/rav4/photos_toyota_rav4_1998_4_b.jpg",
+    unavailableTrims: ["Adventure", "Hybrid XSE"],
+    specs: {
+      engine: "2.0L I4 Gasoline",
+      transmission: "4-speed automatic or 5-speed manual",
+      drivetrain: "FWD or AWD",
+      economy: "22 / 27 mpg",
+      fuelType: "Gasoline",
+    },
+  },
+
+],
     trims: [
       { name: "LE", price: 31000, hp: 203, totalMonthly: "$350-$570" },
       { name: "XLE", price: 34000, hp: 203, totalMonthly: "$380-$610" },
@@ -168,10 +547,41 @@ const CARS: Car[] = [
     image: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&h=500&fit=crop&auto=format",
     badge: "Electric",
     rating: 4.7,
+    generation: [
+  {
+    id: "model3-highland",
+    label: "2024-2026 Highland Refresh",
+    estimatedYear: 2025,
+    image: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&h=500&fit=crop&auto=format",
+    unavailableTrims: [],
+    specs: {
+      engine: "Single or Dual Electric Motor",
+      transmission: "Single-speed automatic",
+      drivetrain: "RWD or AWD",
+      economy: "Electric range estimate",
+      fuelType: "Electric",
+    },
+  },
+  {
+    id: "model3-original",
+    label: "2017-2023 Original Model 3",
+    estimatedYear: 2021,
+    image: "https://hips.hearstapps.com/hmg-prod/images/2019-tesla-model-3-101-1574807022.jpg?crop=0.614xw:0.742xh;0.0765xw,0.258xh&resize=640:*",
+    unavailableTrims: [],
+    specs: {
+      engine: "Single or Dual Electric Motor",
+      transmission: "Single-speed automatic",
+      drivetrain: "RWD or AWD",
+      economy: "Electric range estimate",
+      fuelType: "Electric",
+    },
+  },
+],
     trims: [
       { name: "RWD", price: 39000, hp: 283, totalMonthly: "$430-$690" },
       { name: "Long Range", price: 45000, hp: 394, totalMonthly: "$480-$760" },
       { name: "Performance", price: 53000, hp: 510, totalMonthly: "$560-$880" },
+    
     ],
     specs: {
       engine: "Electric Motor",
@@ -207,29 +617,10 @@ interface CostInputs {
   downPayment: number|"";
   loanMonths: number;
 }
-interface GenerationOptions {
-  id: string;
-  label: string;
-  startYear: number;
-  endYear : number;
-  estimatedYear: number;
-}
-const GENERATION_OPTIONS: GenerationOptions[] = [
-  {
-    id:"older-used",
-    label: "2018-2024 XV70 GEN",
-    startYear: 2018,
-    endYear: 2024,
-    estimatedYear: 2021,
-  },
-  {
-    id:"previous-gen",
-    label: "2012-2017 XV50 Gen",
-    startYear: 2012,
-    endYear:2017,
-    estimatedYear: 2014,
-  }
-]
+
+
+
+
 
 function calculateCarCost(trim: Trim, inputs: CostInputs) {
   const usedYear = inputs.usedYear === "" ? CURRENT_YEAR : inputs.usedYear;
@@ -316,30 +707,38 @@ const SPEC_LABELS: Record<string, string> = {
 };
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
-
 function TrimTabs({
   trims,
   selected,
   onChange,
+  unavailableTrims = [],
 }: {
   trims: Trim[];
   selected: number;
   onChange: (i: number) => void;
+  unavailableTrims?: string[];
 }) {
+  const visibleTrims = trims
+    .map((trim, originalIndex) => ({ trim, originalIndex }))
+    .filter((item) => !unavailableTrims.includes(item.trim.name));
+
   return (
     <div className="flex gap-1 flex-wrap">
-      {trims.map((t, i) => (
+      {visibleTrims.map(({ trim, originalIndex }) => (
         <button
-          key={t.name}
-          onClick={(e) => { e.stopPropagation(); onChange(i); }}
+          key={trim.name}
+          onClick={(e) => {
+            e.stopPropagation();
+            onChange(originalIndex);
+          }}
           className={`px-2.5 py-1 text-xs rounded transition-all duration-200 border ${
-            selected === i
+            selected === originalIndex
               ? "bg-primary/20 border-primary text-primary"
               : "bg-transparent border-border text-muted-foreground hover:border-primary/50 hover:text-foreground"
           }`}
           style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "10px" }}
         >
-          {t.name}
+          {trim.name}
         </button>
       ))}
     </div>
@@ -590,6 +989,7 @@ function SpecsPanel({
   costInputs : CostInputs;
 }) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const [selectedGenerationId, setSelectedGenerationId] = useState("Previous-gen");
 
   useEffect(() => {
     if (car) document.body.style.overflow = "hidden";
@@ -599,7 +999,23 @@ function SpecsPanel({
 
   if (!car) return null;
   const trim = car.trims[trimIdx];
-  const cost = calculateCarCost(trim, costInputs);
+  
+  const generations = car.generation ?? [];
+
+  const selectedGeneration = 
+    generations.find((gen) => gen.id == selectedGenerationId) ??
+    generations[0];
+  const displayImage = selectedGeneration?.image ?? car.image;
+  const displaySpecs = selectedGeneration?.specs?? car.specs;
+  
+
+  const detailCostInputs = selectedGeneration
+  ?{
+    ...costInputs,
+    usedYear: selectedGeneration.estimatedYear,
+  }
+  : costInputs;
+  const cost = calculateCarCost(trim, detailCostInputs);
 
   return (
     <div
@@ -639,13 +1055,13 @@ function SpecsPanel({
         {/* Image */}
         <div className="relative h-52 bg-muted flex-shrink-0 overflow-hidden">
           <img
-            src={car.image}
+            src={displayImage}
             alt={`${car.brand} ${car.model}`}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
           <div className="absolute bottom-4 left-6 right-6">
-            <TrimTabs trims={car.trims} selected={trimIdx} onChange={onTrimChange} />
+            <TrimTabs trims={car.trims} selected={trimIdx} onChange={onTrimChange} unavailableTrims={selectedGeneration?.unavailableTrims} />
           </div>
         </div>
 
@@ -667,6 +1083,38 @@ function SpecsPanel({
     </div>
   ))}
 </div>
+{/* Generation selector */}
+<div className="px-6 py-4 border-b border-border">
+  <p
+    className="text-xs text-primary tracking-widest uppercase mb-3"
+    style={{ fontFamily: "'JetBrains Mono', monospace" }}
+  >
+    Generation / Year Range
+  </p>
+
+  <select
+    value={selectedGenerationId}
+    onChange={(e) => {
+      const nextGenerationId= e.target.value;
+      const nextGeneration = generations.find((gen) =>gen.id === nextGenerationId);
+      setSelectedGenerationId(nextGenerationId);
+      const firstAvailableTrimIndex = car.trims.findIndex(
+        (trim) => !nextGeneration?.unavailableTrims?.includes(trim.name)
+      );
+      onTrimChange(firstAvailableTrimIndex === -1 ? 0 : firstAvailableTrimIndex);
+    }}
+    className="w-full bg-muted border border-border text-foreground text-sm px-3 py-2 rounded outline-none focus:border-primary/60"
+    style={{ fontFamily: "'JetBrains Mono', monospace" }}
+  >
+    {generations.map((gen) => (
+      <option key={gen.id} value={gen.id}>
+        {gen.label}
+      </option>
+    ))}
+  </select>
+
+  
+</div>
 
         {/* Full Specs */}
         <div className="flex-1 overflow-y-auto p-6">
@@ -677,7 +1125,7 @@ function SpecsPanel({
             Full Specifications
           </p>
           <div className="flex flex-col divide-y divide-border">
-            {Object.entries(car.specs).map(([key, val]) => (
+            {Object.entries(displaySpecs).map(([key, val]) => (
               <div key={key} className="flex items-center justify-between py-3">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <span className="text-primary/70">{SPEC_ICONS[key] ?? <SlidersHorizontal size={13} />}</span>
