@@ -2,13 +2,45 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import {
   Search, Grid3X3, List, X, ChevronDown, SlidersHorizontal,
   Zap, Gauge, Fuel, Scale, ArrowRight, Plus, Check, GitCompare,
-  Star, ChevronLeft, ChevronRight, LayoutGrid
+  Star, ChevronLeft, ChevronRight, LayoutGrid, Heart
 } from "lucide-react";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
-const BRANDS = ["All","Toyota", "Honda", "Tesla"];
-
+const BRANDS = ["All","Toyota", "Honda", "Tesla", "Kia"];
+const CATEGORIES = ["All", "Sedan", "SUV", "Truck", "Electric"];
+const MARKETPLACES = [
+  {
+    name: "CarMax",
+    type: "Dealer marketplace",
+    url: "https://www.carmax.com",
+  },
+  {
+    name: "Carvana",
+    type: "Online used car retailer",
+    url: "https://www.carvana.com",
+  },
+  {
+    name: "Kelley Blue Book",
+    type: "Pricing + listings",
+    url: "https://www.kbb.com/used-cars",
+  },
+  {
+    name: "Facebook Marketplace",
+    type: "Private sellers",
+    url: "https://www.facebook.com/marketplace/category/vehicles",
+  },
+  {
+    name: "CarFax",
+    type: "Online used cars retailer and VIN checking",
+    url: "https://www.carfax.com",
+  },
+  {
+    name: "Offerup",
+    type: "Private sellers",
+    url: "https://offerup.com/explore/k/5",
+  },
+];
 interface Trim {
   name: string;
   price: number;
@@ -24,6 +56,7 @@ interface Trim {
 
 interface Car {
   id: string;
+  categories?: ("Sedan"|"SUV"| "Truck"| "Electric") [];
   brand: string;
   model: string;
   year: number;
@@ -38,7 +71,11 @@ interface Car {
     drivetrain: string;
     economy: string;
     fuelType: string;
-    
+    seats?: string;
+    passengerVolume?: string;
+    cargoSpace?: string;
+    towingCapacity?: string;
+    zeroToSixty?: string;
     
   };
 }
@@ -54,6 +91,12 @@ interface GenerationData{
     drivetrain: string;
     economy: string;
     fuelType: string;
+    seats?: string;
+    passengerVolume?: string;
+    cargoSpace?: string;
+    towingCapacity?: string;
+    zeroToSixty?: string;
+    
   };
 }
 
@@ -63,6 +106,7 @@ const CARS: Car[] = [
     brand: "Toyota",
     model: "Camry",
     year: 2026,
+    categories: ["Sedan"],
     image: "https://phantom.estaticos-marca.com/54597bf300089330bb0dd240628f5dca/crop/0x0/1978x1318/resize/1320/f/jpg/assets/multimedia/imagenes/2026/03/05/17726740367584.png",
     badge: "Popular",
     rating: 4.9,
@@ -134,6 +178,7 @@ const CARS: Car[] = [
     drivetrain: "FWD",
     economy: "21 / 31 mpg",
     fuelType: "Gasoline",
+    
   },
 },
   
@@ -154,6 +199,11 @@ const CARS: Car[] = [
       drivetrain: "FWD or AWD",
       economy: "45 / 47 mpg",
       fuelType: "Gasoline Hybrid",
+      seats: "5",
+      passengerVolume: "99.9 cu ft",
+      cargoSpace: "15.1 cu ft",
+      towingCapacity: "Not recommended",
+      zeroToSixty: "Around 7.0 sec",
     },
   },
 
@@ -162,6 +212,7 @@ const CARS: Car[] = [
     brand: "Honda",
     model: "Civic",
     year: 2026,
+    categories: ["Sedan"],
     image: "https://media.ed.edmunds-media.com/honda/civic/2026/oem/2026_honda_civic_sedan_si_fq_oem_1_1280.jpg",
     badge: "Efficient",
     rating: 4.8,
@@ -242,7 +293,11 @@ const CARS: Car[] = [
       drivetrain: "FWD",
       economy: "32 / 41 mpg",
       fuelType: "Gasoline or Hybrid",
-      
+      seats: "5",
+      passengerVolume: "99.0 cu ft",
+      cargoSpace: "14.8 cu ft",
+      towingCapacity: "Not recommended",
+      zeroToSixty: "Around 7.5 sec", 
     },
   },
 
@@ -251,6 +306,7 @@ const CARS: Car[] = [
     brand: "Honda",
     model: "Accord",
     year: 2026,
+    categories: ["Sedan"],
     image: "https://tse2.mm.bing.net/th/id/OIP.jpmBgWUzOsBXeBHwzLCmpQAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
     badge: "Family Pick",
     rating: 4.8,
@@ -327,7 +383,11 @@ const CARS: Car[] = [
       drivetrain: "FWD",
       economy: "29 / 37 mpg",
       fuelType: "Gasoline or Hybrid",
-      
+      seats: "5",
+      passengerVolume: "105.7 cu ft",
+      cargoSpace: "16.7 cu ft",
+      towingCapacity: "Not recommended",
+      zeroToSixty: "Around 7.3 sec",
     },
   },
 
@@ -336,6 +396,7 @@ const CARS: Car[] = [
     brand: "Toyota",
     model: "Corolla",
     year: 2026,
+    categories: ["Sedan"],
     image: "https://pressroom.toyota.com/wp-content/uploads/2025/07/Thumbnail_2026_Corolla_XSE_WindChillPearl_EXT_B_ROLL-1500x900.png",
     badge: "Low Cost",
     rating: 4.7,
@@ -423,7 +484,11 @@ const CARS: Car[] = [
       drivetrain: "FWD or AWD Hybrid",
       economy: "32 / 41 mpg",
       fuelType: "Gasoline or Hybrid",
-      
+      seats: "5",
+      passengerVolume: "88.6 cu ft",
+      cargoSpace: "13.1 cu ft",
+      towingCapacity: "Not recommended",
+      zeroToSixty: "Around 8.0 sec",
     },
   },
 
@@ -432,6 +497,7 @@ const CARS: Car[] = [
     brand: "Toyota",
     model: "RAV4",
     year: 2026,
+    categories: ["SUV"],
     image: "https://www.examiner.com.au/images/transform/v1/crop/frm/silverstone-feed-data/6a30c655-90f6-4cb5-b0ec-2404e8ce1e92.jpg/r0_0_1490_790_w1200_h678_fmax.jpg",
     badge: "SUV Pick",
     rating: 4.8,
@@ -535,7 +601,11 @@ const CARS: Car[] = [
       drivetrain: "FWD or AWD",
       economy: "27 / 35 mpg",
       fuelType: "Gasoline or Hybrid",
-      
+      seats: "5",
+      passengerVolume: "98.9 cu ft",
+      cargoSpace: "37.6 / 69.8 cu ft",
+      towingCapacity: "Up to 3,500 lbs",
+      zeroToSixty: "Around 8.0 sec",
     },
   },
 
@@ -544,7 +614,8 @@ const CARS: Car[] = [
     brand: "Tesla",
     model: "Model 3",
     year: 2026,
-    image: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&h=500&fit=crop&auto=format",
+    categories: ["Electric", "Sedan"],
+    image: "https://static1.pocketlintimages.com/wordpress/wp-content/uploads/2024/04/tesla-model-3-performance-hero-image.jpg",
     badge: "Electric",
     rating: 4.7,
     generation: [
@@ -552,7 +623,7 @@ const CARS: Car[] = [
     id: "model3-highland",
     label: "2024-2026 Highland Refresh",
     estimatedYear: 2025,
-    image: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&h=500&fit=crop&auto=format",
+    image: "https://static1.pocketlintimages.com/wordpress/wp-content/uploads/2024/04/tesla-model-3-performance-hero-image.jpg",
     unavailableTrims: [],
     specs: {
       engine: "Single or Dual Electric Motor",
@@ -589,9 +660,1149 @@ const CARS: Car[] = [
       drivetrain: "RWD or AWD",
       economy: "Electric range estimate",
       fuelType: "Electric",
-      
+      seats: "5",
+     passengerVolume: "97.0 cu ft",
+     cargoSpace: "24.0 cu ft total",
+      towingCapacity: "Not recommended",
+      zeroToSixty: "Around 4.2 sec",
     },
   },
+  {
+  id: "toyota-tacoma-trd",
+  brand: "Toyota",
+  model: "Tacoma",
+  year: 2026,
+  categories: ["Truck"],
+  image: "https://static0.carbuzzimages.com/wordpress/wp-content/uploads/2024/11/2024-toyota-tacoma-trd-pro-44.jpg",
+  badge: "Truck Pick",
+  rating: 4.8,
+
+  generation: [
+    {
+      id: "tacoma-4th-gen",
+      label: "2024-Present 4th Gen",
+      estimatedYear: 2025,
+      image: "https://static0.carbuzzimages.com/wordpress/wp-content/uploads/2024/11/2024-toyota-tacoma-trd-pro-44.jpg",
+      unavailableTrims: [],
+      specs: {
+        engine: "2.4L Turbo I4 or 2.4L Turbo Hybrid I4",
+        transmission: "8-speed automatic or 6-speed manual",
+        drivetrain: "RWD or 4WD",
+        economy: "20 / 26 mpg or hybrid estimate",
+        fuelType: "Gasoline / Hybrid",
+      },
+    },
+    {
+      id: "tacoma-3rd-gen",
+      label: "2016-2023 3rd Gen",
+      estimatedYear: 2020,
+      image: "https://carsfera.com/wp-content/uploads/2023/07/Screenshot-2023-07-25-at-9.19.28-PM.png",
+      unavailableTrims: ["Trailhunter"],
+      specs: {
+        engine: "2.7L I4 or 3.5L V6 Gasoline",
+        transmission: "6-speed automatic or 6-speed manual",
+        drivetrain: "RWD or 4WD",
+        economy: "19 / 24 mpg or lower with V6",
+        fuelType: "Gasoline",
+      },
+    },
+    {
+      id: "tacoma-2nd-gen",
+      label: "2005-2015 2nd Gen",
+      estimatedYear: 2010,
+      image: "https://th.bing.com/th/id/R.74c096d7d7594dbb6cf0dcece6a30e6e?rik=JNY3YCEAyXa1Fg&riu=http%3a%2f%2fst.motortrendenespanol.com%2fuploads%2fsites%2f45%2f2014%2f12%2f2015-Toyota-Tacoma-TRD-Pro-front-three-quarter-02.jpg&ehk=7pgI6ETmMLP5aXTc89cZNUXakwZS7hkud9WVMybP8TU%3d&risl=&pid=ImgRaw&r=0",
+      unavailableTrims: ["TRD Pro", "Trailhunter"],
+      specs: {
+        engine: "2.7L I4 or 4.0L V6 Gasoline",
+        transmission: "5-speed automatic, 6-speed manual, or 5-speed manual",
+        drivetrain: "RWD or 4WD",
+        economy: "18 / 22 mpg or lower with V6",
+        fuelType: "Gasoline",
+      },
+    },
+    {
+      id: "tacoma-1st-gen",
+      label: "1995-2004 1st Gen",
+      estimatedYear: 2001,
+      image: "https://bringatrailer.com/wp-content/uploads/2023/06/2004_toyota_tacoma_dsc_0952-27996.jpeg?w=768",
+      unavailableTrims: ["TRD Sport", "TRD Pro", "Trailhunter", "Limited"],
+      specs: {
+        engine: "2.4L I4, 2.7L I4, or 3.4L V6 Gasoline",
+        transmission: "4-speed automatic or 5-speed manual",
+        drivetrain: "RWD or 4WD",
+        economy: "18 / 22 mpg",
+        fuelType: "Gasoline",
+      },
+    },
+  ],
+
+  trims: [
+    {
+      name: "SR",
+      price: 32000,
+      hp: 228,
+      totalMonthly: "$360-$590",
+      cityMpg: 20,
+      hwyMpg: 26,
+      insuranceMonthly: 150,
+      maintenanceBase: 85,
+    },
+    {
+      name: "SR5",
+      price: 37000,
+      hp: 278,
+      totalMonthly: "$410-$660",
+      cityMpg: 20,
+      hwyMpg: 26,
+      insuranceMonthly: 160,
+      maintenanceBase: 90,
+    },
+    {
+      name: "TRD Sport",
+      price: 42000,
+      hp: 278,
+      totalMonthly: "$460-$720",
+      cityMpg: 19,
+      hwyMpg: 24,
+      insuranceMonthly: 175,
+      maintenanceBase: 95,
+    },
+    {
+      name: "TRD Off-Road",
+      price: 44000,
+      hp: 278,
+      totalMonthly: "$480-$750",
+      cityMpg: 19,
+      hwyMpg: 24,
+      insuranceMonthly: 180,
+      maintenanceBase: 100,
+    },
+    {
+      name: "Limited",
+      price: 53000,
+      hp: 278,
+      totalMonthly: "$570-$890",
+      cityMpg: 19,
+      hwyMpg: 24,
+      insuranceMonthly: 200,
+      maintenanceBase: 105,
+    },
+    {
+      name: "Trailhunter",
+      price: 64000,
+      hp: 326,
+      totalMonthly: "$680-$1050",
+      cityMpg: 22,
+      hwyMpg: 24,
+      insuranceMonthly: 230,
+      maintenanceBase: 115,
+    },
+  ],
+
+  specs: {
+    engine: "2.4L Turbo I4 or Hybrid",
+    transmission: "8-speed automatic or 6-speed manual",
+    drivetrain: "RWD or 4WD",
+    economy: "20 / 26 mpg",
+    fuelType: "Gasoline / Hybrid",
+    seats: "4-5",
+    passengerVolume: "Crew cab estimate",
+    cargoSpace: "5-ft or 6-ft bed",
+    towingCapacity: "Up to 6,500 lbs",
+    zeroToSixty: "Around 7.0 sec",
+  },
+},
+{
+  id: "honda-CRV",
+  brand: "Honda",
+  model: "CR-V",
+  year: 2026,
+  categories: ["SUV"],
+  image: "https://www.kbb.com/wp-content/uploads/2024/10/2025-honda-cr-v-hybrid-front-left-3qtr.jpg?w=757",
+  badge: "Best SUV 2026",
+  rating: 5.0,
+
+  generation: [
+    {
+    id: "crv-6th-gen",
+    label: "2023-Present 6th Gen",
+    estimatedYear: 2025,
+    image: "https://www.kbb.com/wp-content/uploads/2024/10/2025-honda-cr-v-hybrid-front-left-3qtr.jpg?w=757",
+    unavailableTrims: [],
+    specs: {
+      engine: "1.5L Turbo I4 or 2.0L Hybrid",
+      transmission: "CVT or e-CVT automatic",
+      drivetrain: "FWD or AWD",
+      economy: "28 / 34 mpg or higher with Hybrid",
+      fuelType: "Gasoline / Hybrid",
+    },
+  },
+  {
+    id: "crv-5th-gen",
+    label: "2017-2022 5th Gen",
+    estimatedYear: 2020,
+    image: "https://wallpapers.com/images/featured-full/honda-cr-v-wbp7f1ukrnx1bu83.jpg",
+    unavailableTrims: [],
+    specs: {
+      engine: "1.5L Turbo I4 or 2.0L Hybrid",
+      transmission: "CVT automatic",
+      drivetrain: "FWD or AWD",
+      economy: "28 / 34 mpg or higher with Hybrid",
+      fuelType: "Gasoline / Hybrid",
+    },
+  },
+  {
+    id: "crv-4th-gen",
+    label: "2012-2016 4th Gen",
+    estimatedYear: 2014,
+    image: "https://wieck-honda-production.s3-us-west-1.amazonaws.com/videos/5e17b994c2b1e96d9c6413383c749678196b9352/frame-10.0.jpg",
+    unavailableTrims: ["Sport Hybrid", "Sport-L Hybrid", "Sport Touring Hybrid"],
+    specs: {
+      engine: "2.4L I4 Gasoline",
+      transmission: "5-speed automatic or CVT",
+      drivetrain: "FWD or AWD",
+      economy: "26 / 33 mpg",
+      fuelType: "Gasoline",
+    },
+  },
+  {
+    id: "crv-3rd-gen",
+    label: "2007-2011 3rd Gen",
+    estimatedYear: 2009,
+    image: "https://tse1.mm.bing.net/th/id/OIP.-gTRF1emyVFzKckH04JdZAHaE6?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+    unavailableTrims: ["Sport Hybrid", "Sport-L Hybrid", "Sport Touring Hybrid"],
+    specs: {
+      engine: "2.4L I4 Gasoline",
+      transmission: "5-speed automatic",
+      drivetrain: "FWD or AWD",
+      economy: "21 / 28 mpg",
+      fuelType: "Gasoline",
+    },
+  },
+  {
+    id: "crv-2nd-gen",
+    label: "2002-2006 2nd Gen",
+    estimatedYear: 2004,
+    image: "https://file.kelleybluebookimages.com/kbb/base/house/2006/2006-Honda-CR-V-FrontSide_HTCRV061_505x375.jpg",
+    unavailableTrims: ["Sport Hybrid", "Sport-L Hybrid", "Sport Touring Hybrid"],
+    specs: {
+      engine: "2.4L I4 Gasoline",
+      transmission: "4-speed or 5-speed automatic",
+      drivetrain: "FWD or AWD",
+      economy: "22 / 27 mpg",
+      fuelType: "Gasoline",
+    },
+  },
+  {
+    id: "crv-1st-gen",
+    label: "1997-2001 1st Gen",
+    estimatedYear: 1999,
+    image: "https://th.bing.com/th/id/R.a4b3508d1e59b539691e7736388eac96?rik=BWNpOOblBuW1sQ&pid=ImgRaw&r=0",
+    unavailableTrims: ["EX-L", "Sport Hybrid", "Sport-L Hybrid", "Sport Touring Hybrid"],
+    specs: {
+      engine: "2.0L I4 Gasoline",
+      transmission: "4-speed automatic or 5-speed manual",
+      drivetrain: "FWD or AWD",
+      economy: "22 / 25 mpg",
+      fuelType: "Gasoline",
+    },
+  },
+],
+trims: [
+    {
+      name: "LX",
+      price: 31000,
+      hp: 190,
+      totalMonthly: "$350-$570",
+      cityMpg: 28,
+      hwyMpg: 34,
+      insuranceMonthly: 145,
+      maintenanceBase: 80,
+    },
+    {
+      name: "EX",
+      price: 34000,
+      hp: 190,
+      totalMonthly: "$380-$610",
+      cityMpg: 28,
+      hwyMpg: 34,
+      insuranceMonthly: 155,
+      maintenanceBase: 85,
+    },
+    {
+      name: "EX-L",
+      price: 37000,
+      hp: 190,
+      totalMonthly: "$410-$660",
+      cityMpg: 28,
+      hwyMpg: 34,
+      insuranceMonthly: 165,
+      maintenanceBase: 90,
+    },
+    {
+      name: "Sport Hybrid",
+      price: 36000,
+      hp: 204,
+      totalMonthly: "$400-$650",
+      cityMpg: 43,
+      hwyMpg: 36,
+      insuranceMonthly: 165,
+      maintenanceBase: 85,
+    },
+    {
+      name: "TrailSport Hybrid",
+      price: 40000,
+      hp: 204,
+      totalMonthly: "$450-$720",
+      cityMpg: 38,
+      hwyMpg: 33,
+      insuranceMonthly: 180,
+      maintenanceBase: 95,
+    },
+    {
+      name: "Sport-L Hybrid",
+      price: 40000,
+      hp: 204,
+      totalMonthly: "$450-$720",
+      cityMpg: 43,
+      hwyMpg: 36,
+      insuranceMonthly: 180,
+      maintenanceBase: 90,
+    },
+    {
+      name: "Sport Touring Hybrid",
+      price: 43000,
+      hp: 204,
+      totalMonthly: "$480-$770",
+      cityMpg: 40,
+      hwyMpg: 34,
+      insuranceMonthly: 195,
+      maintenanceBase: 95,
+    },
+  ],
+
+  specs: {
+    engine: "1.5L Turbo I4 or 2.0L Hybrid",
+    transmission: "CVT or e-CVT automatic",
+    drivetrain: "FWD or AWD",
+    economy: "28 / 34 mpg or higher with Hybrid",
+    fuelType: "Gasoline / Hybrid",
+    seats: "5",
+    passengerVolume: "106.0 cu ft",
+    cargoSpace: "39.3 / 76.5 cu ft",
+    towingCapacity: "Up to 1,500 lbs",
+    zeroToSixty: "Around 7.6 sec",
+  },
+},
+{
+  id: "tesla-model-y-performance",
+  brand: "Tesla",
+  model: "Model Y",
+  year: 2026,
+  categories: ["SUV", "Electric"],
+  image:"https://static0.topspeedimages.com/wordpress/wp-content/uploads/2025/09/2026-tesla-model-y-performance-8.jpg?q=49&fit=crop&w=825&dpr=2",
+  badge: "Electric SUV",
+  rating: 4.8,
+
+  generation: [
+    {
+      id: "model-y-juniper",
+      label: "2026-Present Juniper Refresh",
+      estimatedYear: 2026,
+      image: "https://www.edmunds.com/assets/m/cs/cms/030987c2-78ad-446c-920d-0235a13d2977/2026-tesla-model-y-performance_600.jpg",
+      unavailableTrims: [],
+      specs: {
+        engine: "Single or Dual Electric Motor",
+        transmission: "Single-speed automatic",
+        drivetrain: "RWD or AWD",
+        economy: "Electric range estimate",
+        fuelType: "Electric",
+      },
+    },
+    {
+      id: "model-y-original",
+      label: "2020-2025 Original Model Y",
+      estimatedYear: 2022,
+      image: "https://static1.hotcarsimages.com/wordpress/wp-content/uploads/2023/08/3-16.jpg",
+      unavailableTrims: ["Premium RWD", "Premium AWD"],
+      specs: {
+        engine: "Single or Dual Electric Motor",
+        transmission: "Single-speed automatic",
+        drivetrain: "RWD or AWD",
+        economy: "Electric range estimate",
+        fuelType: "Electric",
+      },
+    },
+  ],
+
+  trims: [
+    {
+      name: "RWD",
+      price: 45000,
+      hp: 295,
+      totalMonthly: "$490-$780",
+      cityMpg: 125,
+      hwyMpg: 110,
+      insuranceMonthly: 210,
+      maintenanceBase: 45,
+    },
+    {
+      name: "Premium RWD",
+      price: 48000,
+      hp: 295,
+      totalMonthly: "$520-$820",
+      cityMpg: 125,
+      hwyMpg: 110,
+      insuranceMonthly: 220,
+      maintenanceBase: 45,
+    },
+    {
+      name: "Premium AWD",
+      price: 52000,
+      hp: 384,
+      totalMonthly: "$560-$880",
+      cityMpg: 120,
+      hwyMpg: 105,
+      insuranceMonthly: 235,
+      maintenanceBase: 50,
+    },
+    {
+      name: "Long Range AWD",
+      price: 54000,
+      hp: 384,
+      totalMonthly: "$580-$920",
+      cityMpg: 120,
+      hwyMpg: 105,
+      insuranceMonthly: 240,
+      maintenanceBase: 50,
+    },
+    {
+      name: "Performance AWD",
+      price: 61000,
+      hp: 510,
+      totalMonthly: "$650-$1020",
+      cityMpg: 110,
+      hwyMpg: 100,
+      insuranceMonthly: 270,
+      maintenanceBase: 55,
+    },
+  ],
+
+  specs: {
+    engine: "Single or Dual Electric Motor",
+    transmission: "Single-speed automatic",
+    drivetrain: "RWD or AWD",
+    economy: "Electric range estimate",
+    fuelType: "Electric",
+    seats: "5",
+    passengerVolume: "106.0 cu ft",
+    cargoSpace: "30.2 / 72.1 cu ft",
+    towingCapacity: "Up to 3,500 lbs",
+    zeroToSixty: "Around 4.8 sec",
+  },
+},
+{
+  id: "honda-pilot-trailsport",
+  brand: "Honda",
+  model: "Pilot",
+  year: 2026,
+  image: "https://images.caricos.com/h/honda/2026_honda_pilot/images/2560x1440/2026_honda_pilot_15_2560x1440.jpg",
+  badge: "Family SUV",
+  rating: 4.8,
+
+  generation: [
+    {
+      id: "pilot-4th-gen",
+      label: "2023-2026 4th Gen",
+      estimatedYear: 2025,
+      image: "https://images.caricos.com/h/honda/2026_honda_pilot/images/2560x1440/2026_honda_pilot_15_2560x1440.jpg",
+      unavailableTrims: [],
+      specs: {
+        engine: "3.5L V6 Gasoline",
+        transmission: "10-speed automatic",
+        drivetrain: "FWD or AWD",
+        economy: "19 / 27 mpg",
+        fuelType: "Gasoline",
+      },
+    },
+    {
+      id: "pilot-3rd-gen",
+      label: "2016-2022 3rd Gen",
+      estimatedYear: 2019,
+      image: "https://content-images.carmax.com/qeontfmijmzv/15xScCrCEB5g9Pl3KWXmGd/4c2168bbf805bbf451e73bbb40451d62/01-Exterior_Pilot_2.jpg?w=2100&fm=webp",
+      unavailableTrims: ["TrailSport", "Black Edition"],
+      specs: {
+        engine: "3.5L V6 Gasoline",
+        transmission: "6-speed or 9-speed automatic",
+        drivetrain: "FWD or AWD",
+        economy: "19 / 27 mpg",
+        fuelType: "Gasoline",
+      },
+    },
+    {
+      id: "pilot-2nd-gen",
+      label: "2009-2015 2nd Gen",
+      estimatedYear: 2012,
+      image: "https://tse3.mm.bing.net/th/id/OIP.aYLR1uE4SjcW7fCaKvX3bQHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+      unavailableTrims: ["Sport", "TrailSport", "Black Edition"],
+      specs: {
+        engine: "3.5L V6 Gasoline",
+        transmission: "5-speed automatic",
+        drivetrain: "FWD or AWD",
+        economy: "18 / 25 mpg",
+        fuelType: "Gasoline",
+      },
+    },
+    {
+      id: "pilot-1st-gen",
+      label: "2003-2008 1st Gen",
+      estimatedYear: 2006,
+      image: "https://bringatrailer.com/wp-content/uploads/2025/01/2008_honda_pilot_img_1346-2-54540.jpg",
+      unavailableTrims: ["Sport", "TrailSport", "Touring", "Elite", "Black Edition"],
+      specs: {
+        engine: "3.5L V6 Gasoline",
+        transmission: "5-speed automatic",
+        drivetrain: "FWD or AWD",
+        economy: "16 / 22 mpg",
+        fuelType: "Gasoline",
+      },
+    },
+  ],
+
+  trims: [
+    {
+      name: "Sport",
+      price: 43000,
+      hp: 285,
+      totalMonthly: "$470-$750",
+      cityMpg: 19,
+      hwyMpg: 27,
+      insuranceMonthly: 175,
+      maintenanceBase: 90,
+    },
+    {
+      name: "EX-L",
+      price: 46000,
+      hp: 285,
+      totalMonthly: "$500-$800",
+      cityMpg: 19,
+      hwyMpg: 27,
+      insuranceMonthly: 185,
+      maintenanceBase: 95,
+    },
+    {
+      name: "TrailSport",
+      price: 50000,
+      hp: 285,
+      totalMonthly: "$540-$860",
+      cityMpg: 18,
+      hwyMpg: 23,
+      insuranceMonthly: 200,
+      maintenanceBase: 105,
+    },
+    {
+      name: "Touring",
+      price: 51000,
+      hp: 285,
+      totalMonthly: "$550-$880",
+      cityMpg: 19,
+      hwyMpg: 27,
+      insuranceMonthly: 205,
+      maintenanceBase: 100,
+    },
+    {
+      name: "Elite",
+      price: 55000,
+      hp: 285,
+      totalMonthly: "$590-$940",
+      cityMpg: 19,
+      hwyMpg: 25,
+      insuranceMonthly: 220,
+      maintenanceBase: 110,
+    },
+    {
+      name: "Black Edition",
+      price: 57000,
+      hp: 285,
+      totalMonthly: "$610-$970",
+      cityMpg: 19,
+      hwyMpg: 25,
+      insuranceMonthly: 230,
+      maintenanceBase: 115,
+    },
+  ],
+
+  specs: {
+    engine: "3.5L V6 Gasoline",
+    transmission: "10-speed automatic",
+    drivetrain: "FWD or AWD",
+    economy: "19 / 27 mpg",
+    fuelType: "Gasoline",
+    seats: "7-8",
+   passengerVolume: "158.4 cu ft",
+   cargoSpace: "18.6 / 87.0 cu ft",
+   towingCapacity: "Up to 5,000 lbs",
+   zeroToSixty: "Around 6.9 sec",
+  },
+},
+{
+  id: "toyota-highlander-limited",
+  brand: "Toyota",
+  model: "Highlander",
+  year: 2026,
+  categories: ["SUV"],
+  image: "https://media.ed.edmunds-media.com/toyota/highlander-hybrid/2022/oem/2022_toyota_highlander-hybrid_4dr-suv_platinum_fq_oem_1_815.jpg",
+  badge: "Family SUV",
+  rating: 4.8,
+
+  generation: [
+    {
+      id: "highlander-4th-gen",
+      label: "2020-Present 4th Gen",
+      estimatedYear: 2024,
+      image: "https://media.ed.edmunds-media.com/toyota/highlander-hybrid/2022/oem/2022_toyota_highlander-hybrid_4dr-suv_platinum_fq_oem_1_815.jpg",
+      unavailableTrims: [],
+      specs: {
+        engine: "2.4L Turbo I4 or 2.5L Hybrid I4",
+        transmission: "8-speed automatic or e-CVT hybrid",
+        drivetrain: "AWD",
+        economy: "21 / 28 mpg or 35 mpg combined hybrid",
+        fuelType: "Gasoline / Hybrid",
+      },
+    },
+    {
+      id: "highlander-3rd-gen",
+      label: "2014-2019 3rd Gen",
+      estimatedYear: 2017,
+      image: "https://images.hgmsites.net/hug/2019-toyota-highlander_100674055_h.jpg",
+      unavailableTrims: ["XSE"],
+      specs: {
+        engine: "2.7L I4, 3.5L V6, or Hybrid V6",
+        transmission: "6-speed or 8-speed automatic",
+        drivetrain: "FWD or AWD",
+        economy: "20 / 27 mpg or higher with hybrid",
+        fuelType: "Gasoline / Hybrid",
+      },
+    },
+    {
+      id: "highlander-2nd-gen",
+      label: "2008-2013 2nd Gen",
+      estimatedYear: 2011,
+      image: "https://annuelauto.ca/wp-content/uploads/2022/02/010%20highlander%20hybrid.jpg",
+      unavailableTrims: ["XSE", "Platinum"],
+      specs: {
+        engine: "2.7L I4, 3.5L V6, or Hybrid V6",
+        transmission: "5-speed or 6-speed automatic",
+        drivetrain: "FWD or AWD",
+        economy: "18 / 24 mpg or higher with hybrid",
+        fuelType: "Gasoline / Hybrid",
+      },
+    },
+    {
+      id: "highlander-1st-gen",
+      label: "2001-2007 1st Gen",
+      estimatedYear: 2005,
+      image: "https://static0.topspeedimages.com/wordpress/wp-content/uploads/jpg/200608/2007-toyota-highlander-hy-13.jpg",
+      unavailableTrims: ["XSE", "Platinum"],
+      specs: {
+        engine: "2.4L I4 or 3.3L V6 Gasoline",
+        transmission: "4-speed or 5-speed automatic",
+        drivetrain: "FWD or AWD",
+        economy: "18 / 24 mpg",
+        fuelType: "Gasoline",
+      },
+    },
+  ],
+
+  trims: [
+    {
+      name: "XLE",
+      price: 45000,
+      hp: 265,
+      totalMonthly: "$500-$790",
+      cityMpg: 21,
+      hwyMpg: 28,
+      insuranceMonthly: 175,
+      maintenanceBase: 95,
+    },
+    {
+      name: "XSE",
+      price: 48000,
+      hp: 265,
+      totalMonthly: "$530-$840",
+      cityMpg: 21,
+      hwyMpg: 28,
+      insuranceMonthly: 185,
+      maintenanceBase: 100,
+    },
+    {
+      name: "Limited",
+      price: 51000,
+      hp: 265,
+      totalMonthly: "$560-$890",
+      cityMpg: 21,
+      hwyMpg: 28,
+      insuranceMonthly: 200,
+      maintenanceBase: 105,
+    },
+    {
+      name: "Platinum",
+      price: 56000,
+      hp: 265,
+      totalMonthly: "$610-$970",
+      cityMpg: 21,
+      hwyMpg: 28,
+      insuranceMonthly: 220,
+      maintenanceBase: 110,
+    },
+    {
+      name: "Hybrid XLE",
+      price: 48000,
+      hp: 243,
+      totalMonthly: "$520-$830",
+      cityMpg: 35,
+      hwyMpg: 35,
+      insuranceMonthly: 190,
+      maintenanceBase: 90,
+    },
+  ],
+
+  specs: {
+    engine: "2.4L Turbo I4 or 2.5L Hybrid I4",
+    transmission: "8-speed automatic or e-CVT hybrid",
+    drivetrain: "AWD",
+    economy: "21 / 28 mpg or 35 mpg combined hybrid",
+    fuelType: "Gasoline / Hybrid",
+    seats: "7-8",
+   passengerVolume: "141.3 cu ft",
+   cargoSpace: "16.0 / 84.3 cu ft",
+   towingCapacity: "Up to 5,000 lbs",
+   zeroToSixty: "Around 7.2 sec",
+  },
+},
+{
+  id: "kia-telluride-sx-prestige",
+  brand: "Kia",
+  model: "Telluride",
+  year: 2027,
+  categories: ["SUV"],
+  image: "https://autoimage.capitalone.com/cms/Auto/assets/images/3974-inset01-2027-kia-telluride-hybrid-x-line-front-quarter.jpg",
+  badge: "3-Row SUV",
+  rating: 4.8,
+
+  generation: [
+    {
+      id: "telluride-2nd-gen",
+      label: "2027-Present 2nd Gen",
+      estimatedYear: 2027,
+      image: "https://autoimage.capitalone.com/cms/Auto/assets/images/3974-inset01-2027-kia-telluride-hybrid-x-line-front-quarter.jpg",
+      unavailableTrims: [],
+      specs: {
+        engine: "2.5L Turbo I4 or Turbo Hybrid",
+        transmission: "8-speed automatic",
+        drivetrain: "FWD or AWD",
+        economy: "20 / 26 mpg or 35 mpg combined hybrid",
+        fuelType: "Gasoline / Hybrid",
+      },
+    },
+    {
+      id: "telluride-1st-gen",
+      label: "2020-2025 1st Gen",
+      estimatedYear: 2023,
+      image: "https://media.ed.edmunds-media.com/kia/telluride/2023/oem/2023_kia_telluride_4dr-suv_base_fq_oem_1_1280.jpg",
+      unavailableTrims: ["Hybrid EX", "Hybrid SX", "Hybrid SX Prestige"],
+      specs: {
+        engine: "3.8L V6 Gasoline",
+        transmission: "8-speed automatic",
+        drivetrain: "FWD or AWD",
+        economy: "20 / 26 mpg",
+        fuelType: "Gasoline",
+      },
+    },
+  ],
+
+  trims: [
+    {
+      name: "LX",
+      price: 41000,
+      hp: 274,
+      totalMonthly: "$460-$730",
+      cityMpg: 20,
+      hwyMpg: 26,
+      insuranceMonthly: 175,
+      maintenanceBase: 90,
+    },
+    {
+      name: "S",
+      price: 44000,
+      hp: 274,
+      totalMonthly: "$490-$780",
+      cityMpg: 20,
+      hwyMpg: 26,
+      insuranceMonthly: 185,
+      maintenanceBase: 95,
+    },
+    {
+      name: "EX",
+      price: 47000,
+      hp: 274,
+      totalMonthly: "$520-$830",
+      cityMpg: 20,
+      hwyMpg: 26,
+      insuranceMonthly: 195,
+      maintenanceBase: 100,
+    },
+    {
+      name: "SX",
+      price: 52000,
+      hp: 274,
+      totalMonthly: "$570-$910",
+      cityMpg: 20,
+      hwyMpg: 26,
+      insuranceMonthly: 210,
+      maintenanceBase: 105,
+    },
+    {
+      name: "SX Prestige",
+      price: 57000,
+      hp: 274,
+      totalMonthly: "$620-$990",
+      cityMpg: 20,
+      hwyMpg: 26,
+      insuranceMonthly: 230,
+      maintenanceBase: 115,
+    },
+    {
+      name: "Hybrid EX",
+      price: 48000,
+      hp: 329,
+      totalMonthly: "$530-$850",
+      cityMpg: 35,
+      hwyMpg: 35,
+      insuranceMonthly: 200,
+      maintenanceBase: 90,
+    },
+    {
+      name: "Hybrid SX",
+      price: 54000,
+      hp: 329,
+      totalMonthly: "$590-$940",
+      cityMpg: 35,
+      hwyMpg: 35,
+      insuranceMonthly: 220,
+      maintenanceBase: 95,
+    },
+    {
+      name: "Hybrid SX Prestige",
+      price: 60000,
+      hp: 329,
+      totalMonthly: "$650-$1040",
+      cityMpg: 35,
+      hwyMpg: 35,
+      insuranceMonthly: 240,
+      maintenanceBase: 105,
+    },
+  ],
+
+  specs: {
+    engine: "2.5L Turbo I4 or Turbo Hybrid",
+    transmission: "8-speed automatic",
+    drivetrain: "FWD or AWD",
+    economy: "20 / 26 mpg or 35 mpg combined hybrid",
+    fuelType: "Gasoline / Hybrid",
+    seats: "7-8",
+   passengerVolume: "178.1 cu ft",
+   cargoSpace: "21.0 / 87.0 cu ft",
+   towingCapacity: "Up to 5,000 lbs",
+   zeroToSixty: "Around 7.0 sec",
+  },
+},
+  {
+  id: "honda-ridgeline-trailsport",
+  brand: "Honda",
+  model: "Ridgeline",
+  year: 2026,
+  categories:["Truck"],
+  image:"https://www.motortrend.com/files/68c9cbab9e5282000282e530/2026hondaridgelineawdpickuptruck-8.jpg?w=768&width=768&q=75&format=webp",
+  badge: "Midsize Truck",
+  rating: 4.7,
+
+  generation: [
+    {
+      id: "ridgeline-2nd-gen-refresh",
+      label: "2024-Present 2nd Gen Refresh",
+      estimatedYear: 2025,
+      image: "https://www.edmunds.com/assets/m/honda/ridgeline/2026/oem/2026_honda_ridgeline_crew-cab-pickup_trailsport_fq_oem_1_600x400.jpg",
+      unavailableTrims: [],
+      specs: {
+        engine: "3.5L V6 Gasoline",
+        transmission: "9-speed automatic",
+        drivetrain: "AWD",
+        economy: "18 / 24 mpg",
+        fuelType: "Gasoline",
+        seats: "5",
+        passengerVolume: "109.7 cu ft",
+        cargoSpace: "5.3-ft bed + in-bed trunk",
+        towingCapacity: "Up to 5,000 lbs",
+        zeroToSixty: "Around 6.5 sec",
+      },
+    },
+    {
+      id: "ridgeline-2nd-gen",
+      label: "2015-2023 2nd Gen",
+      estimatedYear: 2020,
+      image: "https://media.ed.edmunds-media.com/honda/ridgeline/2020/oem/2020_honda_ridgeline_crew-cab-pickup_black-edition_fq_oem_2_815.jpg",
+      unavailableTrims: ["TrailSport"],
+      specs: {
+        engine: "3.5L V6 Gasoline",
+        transmission: "6-speed or 9-speed automatic",
+        drivetrain: "FWD or AWD",
+        economy: "18 / 24 mpg",
+        fuelType: "Gasoline",
+        seats: "5",
+        passengerVolume: "109.7 cu ft",
+        cargoSpace: "5.3-ft bed + in-bed trunk",
+        towingCapacity: "Up to 5,000 lbs",
+        zeroToSixty: "Around 6.6 sec",
+      },
+    },
+    {
+      id: "ridgeline-1st-gen",
+      label: "2006-2014 1st Gen",
+      estimatedYear: 2010,
+      image: "https://consumerguide.com/wp-content/uploads/bfi_thumb/2014_Honda_Ridgeline_Sport_02-e1381853781954-lhbp81u9qlawj19co14zqojekhrw38subjo2icchi8.jpg",
+      unavailableTrims: ["Sport", "TrailSport", "Black Edition"],
+      specs: {
+        engine: "3.5L V6 Gasoline",
+        transmission: "5-speed automatic",
+        drivetrain: "AWD",
+        economy: "15 / 21 mpg",
+        fuelType: "Gasoline",
+        seats: "5",
+        passengerVolume: "112.0 cu ft",
+        cargoSpace: "5-ft bed + in-bed trunk",
+        towingCapacity: "Up to 5,000 lbs",
+        zeroToSixty: "Around 7.5 sec",
+      },
+    },
+  ],
+
+  trims: [
+    {
+      name: "Sport",
+      price: 41000,
+      hp: 280,
+      totalMonthly: "$450-$720",
+      cityMpg: 18,
+      hwyMpg: 24,
+      insuranceMonthly: 170,
+      maintenanceBase: 90,
+    },
+    {
+      name: "RTL",
+      price: 44000,
+      hp: 280,
+      totalMonthly: "$480-$770",
+      cityMpg: 18,
+      hwyMpg: 24,
+      insuranceMonthly: 180,
+      maintenanceBase: 95,
+    },
+    {
+      name: "TrailSport",
+      price: 47000,
+      hp: 280,
+      totalMonthly: "$510-$820",
+      cityMpg: 18,
+      hwyMpg: 23,
+      insuranceMonthly: 195,
+      maintenanceBase: 105,
+    },
+    {
+      name: "Black Edition",
+      price: 49000,
+      hp: 280,
+      totalMonthly: "$540-$860",
+      cityMpg: 18,
+      hwyMpg: 24,
+      insuranceMonthly: 205,
+      maintenanceBase: 110,
+    },
+  ],
+
+  specs: {
+    engine: "3.5L V6 Gasoline",
+    transmission: "9-speed automatic",
+    drivetrain: "AWD",
+    economy: "18 / 24 mpg",
+    fuelType: "Gasoline",
+    seats: "5",
+    passengerVolume: "109.7 cu ft",
+    cargoSpace: "5.3-ft bed + in-bed trunk",
+    towingCapacity: "Up to 5,000 lbs",
+    zeroToSixty: "Around 6.5 sec",
+  },
+},
+
+{
+  id: "toyota-tundra-limited",
+  brand: "Toyota",
+  model: "Tundra",
+  year: 2026,
+  categories: ["Truck"],
+  image: "https://www.motortrend.com/files/687fbdeafb4403000207bba9/2026toyotatundratrdpro1.jpg",
+  badge: "Full-Size Truck",
+  rating: 4.7,
+
+  generation: [
+    {
+      id: "tundra-3rd-gen",
+      label: "2022-Present 3rd Gen",
+      estimatedYear: 2024,
+      image: "https://www.motortrend.com/files/687fbdeafb4403000207bba9/2026toyotatundratrdpro1.jpg",
+      unavailableTrims: [],
+      specs: {
+        engine: "3.4L Twin-Turbo V6 or Hybrid V6",
+        transmission: "10-speed automatic",
+        drivetrain: "RWD or 4WD",
+        economy: "18 / 24 mpg or hybrid estimate",
+        fuelType: "Gasoline / Hybrid",
+        seats: "5",
+        passengerVolume: "CrewMax cabin estimate",
+        cargoSpace: "5.5-ft or 6.5-ft bed",
+        towingCapacity: "Up to 12,000 lbs",
+        zeroToSixty: "Around 5.7 sec hybrid",
+      },
+    },
+    {
+      id: "tundra-2nd-gen",
+      label: "2007-2021 2nd Gen",
+      estimatedYear: 2016,
+      
+      image: "https://tse3.mm.bing.net/th/id/OIP.nb8V7Z3HmdDO8XjOEGISgwHaEK?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+      unavailableTrims: ["Capstone"],
+      specs: {
+        engine: "4.6L V8 or 5.7L V8 Gasoline",
+        transmission: "6-speed automatic",
+        drivetrain: "RWD or 4WD",
+        economy: "13 / 18 mpg",
+        fuelType: "Gasoline",
+        seats: "5-6",
+        passengerVolume: "CrewMax cabin estimate",
+        cargoSpace: "5.5-ft, 6.5-ft, or 8.1-ft bed",
+        towingCapacity: "Up to 10,200 lbs",
+        zeroToSixty: "Around 6.7 sec",
+      },
+    },
+    {
+      id: "tundra-1st-gen",
+      label: "2000-2006 1st Gen",
+      estimatedYear: 2004,
+      image: "https://bringatrailer.com/wp-content/uploads/2025/08/2005_toyota_tundra_img_7197-25946.jpeg?fit=940%2C626",
+      unavailableTrims: ["Platinum", "1794 Edition", "TRD Pro", "Capstone"],
+      specs: {
+        engine: "3.4L V6, 4.0L V6, or 4.7L V8 Gasoline",
+        transmission: "4-speed or 5-speed automatic",
+        drivetrain: "RWD or 4WD",
+        economy: "14 / 18 mpg",
+        fuelType: "Gasoline",
+        seats: "5-6",
+        passengerVolume: "Double cab estimate",
+        cargoSpace: "6.5-ft or 8-ft bed",
+        towingCapacity: "Up to 7,100 lbs",
+        zeroToSixty: "Around 7.8 sec",
+      },
+    },
+  ],
+
+  trims: [
+    {
+      name: "SR",
+      price: 42000,
+      hp: 358,
+      totalMonthly: "$470-$750",
+      cityMpg: 18,
+      hwyMpg: 24,
+      insuranceMonthly: 180,
+      maintenanceBase: 105,
+    },
+    {
+      name: "SR5",
+      price: 47000,
+      hp: 389,
+      totalMonthly: "$520-$830",
+      cityMpg: 18,
+      hwyMpg: 24,
+      insuranceMonthly: 195,
+      maintenanceBase: 110,
+    },
+    {
+      name: "Limited",
+      price: 57000,
+      hp: 389,
+      totalMonthly: "$620-$990",
+      cityMpg: 18,
+      hwyMpg: 24,
+      insuranceMonthly: 225,
+      maintenanceBase: 120,
+    },
+    {
+      name: "Platinum",
+      price: 65000,
+      hp: 389,
+      totalMonthly: "$700-$1120",
+      cityMpg: 17,
+      hwyMpg: 22,
+      insuranceMonthly: 250,
+      maintenanceBase: 130,
+    },
+    {
+      name: "1794 Edition",
+      price: 66000,
+      hp: 389,
+      totalMonthly: "$710-$1140",
+      cityMpg: 17,
+      hwyMpg: 22,
+      insuranceMonthly: 255,
+      maintenanceBase: 130,
+    },
+    {
+      name: "TRD Pro",
+      price: 74000,
+      hp: 437,
+      totalMonthly: "$800-$1280",
+      cityMpg: 18,
+      hwyMpg: 20,
+      insuranceMonthly: 285,
+      maintenanceBase: 145,
+    },
+    {
+      name: "Capstone",
+      price: 80000,
+      hp: 437,
+      totalMonthly: "$860-$1380",
+      cityMpg: 19,
+      hwyMpg: 22,
+      insuranceMonthly: 310,
+      maintenanceBase: 150,
+    },
+  ],
+
+  specs: {
+    engine: "3.4L Twin-Turbo V6 or Hybrid V6",
+    transmission: "10-speed automatic",
+    drivetrain: "RWD or 4WD",
+    economy: "18 / 24 mpg or hybrid estimate",
+    fuelType: "Gasoline / Hybrid",
+    seats: "5",
+    passengerVolume: "CrewMax cabin estimate",
+    cargoSpace: "5.5-ft or 6.5-ft bed",
+    towingCapacity: "Up to 12,000 lbs",
+    zeroToSixty: "Around 5.7 sec hybrid",
+  },
+},  
+
+
 ];
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -704,6 +1915,11 @@ const SPEC_LABELS: Record<string, string> = {
   drivetrain: "Drivetrain",
   economy: "Economy",
   fuelType: "Fuel Type",
+  seats: "Seats",
+  passengerVolume: "Cabin Space",
+  cargoSpace: "Cargo Space",
+  towingCapacity: "Towing Capacity",
+  zeroToSixty: "0-60 mph",
 };
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -751,6 +1967,8 @@ function CarCard({
   onTrimChange,
   inCompare,
   onCompareToggle,
+  isFavorite,
+  onFavoriteToggle,
   onViewDetails,
   listView,
   costInputs,
@@ -760,6 +1978,8 @@ function CarCard({
   onTrimChange: (i: number) => void;
   inCompare: boolean;
   onCompareToggle: () => void;
+  isFavorite: boolean;
+  onFavoriteToggle: () => void;
   onViewDetails: () => void;
   listView: boolean;
   costInputs: CostInputs;
@@ -793,6 +2013,19 @@ function CarCard({
               {car.badge}
             </span>
           )}
+          <button
+  onClick={(e) => {
+    e.stopPropagation();
+    onFavoriteToggle();
+  }}
+  className={`absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full border transition-all duration-200 ${
+    isFavorite
+      ? "bg-red-500/20 border-red-400 text-red-400"
+      : "bg-card/80 border-border text-muted-foreground hover:border-red-400 hover:text-red-400 backdrop-blur-sm"
+  }`}
+>
+  <Heart size={15} className={isFavorite ? "fill-current" : ""} />
+</button>
         </div>
         <div className="flex-1 p-5 flex flex-col justify-between">
           <div className="flex items-start justify-between gap-4">
@@ -905,6 +2138,19 @@ function CarCard({
         >
           {inCompare ? <Check size={12} /> : <Plus size={12} />}
         </button>
+        <button
+  onClick={(e) => {
+    e.stopPropagation();
+    onFavoriteToggle();
+  }}
+  className={`absolute top-3 right-12 w-7 h-7 flex items-center justify-center rounded border transition-all duration-200 ${
+    isFavorite
+      ? "bg-red-500/20 border-red-400 text-red-400"
+      : "bg-card/80 border-border text-muted-foreground hover:border-red-400 hover:text-red-400 backdrop-blur-sm"
+  }`}
+>
+  <Heart size={13} className={isFavorite ? "fill-current" : ""} />
+</button>
       </div>
 
       <div className="flex-1 p-4 flex flex-col gap-3">
@@ -1171,6 +2417,26 @@ function SpecsPanel({
       </div>
     ))}
   </div>
+  <div className="mt-6">
+    <p className="text-xs text-primary tracking-widest uppercase mb-4">
+      Places to Buy / Sell
+    </p>
+
+    <div className="grid grid-cols-2 gap-2">
+      {MARKETPLACES.map((site) => (
+        <a
+          key={site.name}
+          href={site.url}
+          target="_blank"
+          rel="noreferrer"
+          className="border border-border rounded px-3 py-2 hover:border-primary/60 transition-colors"
+        >
+          <div className="text-sm text-foreground font-semibold">{site.name}</div>
+          <div className="text-xs text-muted-foreground">{site.type}</div>
+        </a>
+      ))}
+    </div>
+  </div>
 </div>
       </div>
     </div>
@@ -1319,13 +2585,20 @@ export default function App() {
 });
   const [query, setQuery] = useState("");
   const [brand, setBrand] = useState("All");
+  const [categories, setCategories] = useState("All");
   const [sortBy, setSortBy] = useState("featured");
+  const [favouriteIds, setFavouriteIds] = useState<string[]>(() =>{
+    return JSON.parse(localStorage.getItem("favouriteCars") || "[]");
+
+  });
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedTrims, setSelectedTrims] = useState<Record<string, number>>({});
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [detailCarId, setDetailCarId] = useState<string | null>(null);
   const [showCompare, setShowCompare] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  
+  
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 60);
@@ -1345,6 +2618,15 @@ export default function App() {
       return [...prev, id];
     });
   };
+  const toggleFavorite = (id:string) =>{
+    setFavouriteIds((prev) => {
+      const next = prev.includes(id)
+       ? prev.filter((x) => x !== id)
+       : [...prev, id];
+      localStorage.setItem("favouriteCars", JSON.stringify(next));
+      return next; 
+    });
+  };
 
   const filtered = useMemo(() => {
     let list = CARS.filter((c) => {
@@ -1355,7 +2637,8 @@ export default function App() {
         c.brand.toLowerCase().includes(q) ||
         c.year.toString().includes(q);
       const matchBrand = brand === "All" || c.brand === brand;
-      return matchSearch && matchBrand;
+      const matchCategories = categories == "All" || c.categories?.includes(categories as any);
+      return matchSearch && matchBrand && matchCategories;
     });
 
     if (sortBy === "price-asc") list = [...list].sort((a, b) => a.trims[0].price - b.trims[0].price);
@@ -1364,7 +2647,7 @@ export default function App() {
     if (sortBy === "rating") list = [...list].sort((a, b) => b.rating - a.rating);
 
     return list;
-  }, [query, brand, sortBy]);
+  }, [query, brand, categories, sortBy]);
 
   const detailCar = detailCarId ? CARS.find((c) => c.id === detailCarId) ?? null : null;
   const compareCars = CARS.filter((c) => compareIds.includes(c.id));
@@ -1601,7 +2884,29 @@ export default function App() {
               </button>
             ))}
           </div>
+          <div className="flex items-center gap-2 flex-wrap mb-6">
+  <span
+    className="text-xs text-muted-foreground mr-2 flex items-center gap-1.5"
+    style={{ fontFamily: "'JetBrains Mono', monospace" }}
+  >
+    <SlidersHorizontal size={12} /> Category
+  </span>
 
+  {CATEGORIES.map((cat) => (
+    <button
+      key={cat}
+      onClick={() => setCategories(cat)}
+      className={`px-4 py-1.5 text-xs rounded border transition-all duration-200 ${
+        categories === cat
+          ? "bg-primary text-primary-foreground border-primary"
+          : "bg-transparent border-border text-muted-foreground hover:border-primary/50 hover:text-foreground"
+      }`}
+      style={{ fontFamily: "'JetBrains Mono', monospace" }}
+    >
+      {cat}
+    </button>
+  ))}
+</div>
           {/* Controls row */}
           <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
             <p className="text-sm text-muted-foreground">
@@ -1664,6 +2969,8 @@ export default function App() {
                   onTrimChange={(i) => setTrimIdx(car.id, i)}
                   inCompare={compareIds.includes(car.id)}
                   onCompareToggle={() => toggleCompare(car.id)}
+                  isFavorite ={favouriteIds.includes(car.id)}
+                  onFavoriteToggle={() => toggleFavorite(car.id)}
                   onViewDetails={() => setDetailCarId(car.id)}
                   listView={false}
                   costInputs={costInputs}
@@ -1680,6 +2987,8 @@ export default function App() {
                   onTrimChange={(i) => setTrimIdx(car.id, i)}
                   inCompare={compareIds.includes(car.id)}
                   onCompareToggle={() => toggleCompare(car.id)}
+                  isFavorite={favouriteIds.includes(car.id)}
+                  onFavoriteToggle={() => toggleFavorite(car.id)}
                   onViewDetails={() => setDetailCarId(car.id)}
                   listView={true}
                   costInputs={costInputs}
