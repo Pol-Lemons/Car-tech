@@ -1967,8 +1967,8 @@ function CarCard({
   onTrimChange,
   inCompare,
   onCompareToggle,
-  isFavorite,
-  onFavoriteToggle,
+  isFavourite,
+  onFavouriteToggle,
   onViewDetails,
   listView,
   costInputs,
@@ -1978,8 +1978,8 @@ function CarCard({
   onTrimChange: (i: number) => void;
   inCompare: boolean;
   onCompareToggle: () => void;
-  isFavorite: boolean;
-  onFavoriteToggle: () => void;
+  isFavourite: boolean;
+  onFavouriteToggle: () => void;
   onViewDetails: () => void;
   listView: boolean;
   costInputs: CostInputs;
@@ -2016,15 +2016,15 @@ function CarCard({
           <button
   onClick={(e) => {
     e.stopPropagation();
-    onFavoriteToggle();
+    onFavouriteToggle();
   }}
   className={`absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full border transition-all duration-200 ${
-    isFavorite
+    isFavourite
       ? "bg-red-500/20 border-red-400 text-red-400"
       : "bg-card/80 border-border text-muted-foreground hover:border-red-400 hover:text-red-400 backdrop-blur-sm"
   }`}
 >
-  <Heart size={15} className={isFavorite ? "fill-current" : ""} />
+  <Heart size={15} className={isFavourite ? "fill-current" : ""} />
 </button>
         </div>
         <div className="flex-1 p-5 flex flex-col justify-between">
@@ -2141,15 +2141,15 @@ function CarCard({
         <button
   onClick={(e) => {
     e.stopPropagation();
-    onFavoriteToggle();
+    onFavouriteToggle();
   }}
   className={`absolute top-3 right-12 w-7 h-7 flex items-center justify-center rounded border transition-all duration-200 ${
-    isFavorite
+    isFavourite
       ? "bg-red-500/20 border-red-400 text-red-400"
       : "bg-card/80 border-border text-muted-foreground hover:border-red-400 hover:text-red-400 backdrop-blur-sm"
   }`}
 >
-  <Heart size={13} className={isFavorite ? "fill-current" : ""} />
+  <Heart size={13} className={isFavourite ? "fill-current" : ""} />
 </button>
       </div>
 
@@ -2591,6 +2591,7 @@ export default function App() {
     return JSON.parse(localStorage.getItem("favouriteCars") || "[]");
 
   });
+  const [showFavouritesOnly, setShowFavouritesOnly] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedTrims, setSelectedTrims] = useState<Record<string, number>>({});
   const [compareIds, setCompareIds] = useState<string[]>([]);
@@ -2618,7 +2619,7 @@ export default function App() {
       return [...prev, id];
     });
   };
-  const toggleFavorite = (id:string) =>{
+  const toggleFavourite = (id:string) =>{
     setFavouriteIds((prev) => {
       const next = prev.includes(id)
        ? prev.filter((x) => x !== id)
@@ -2638,7 +2639,10 @@ export default function App() {
         c.year.toString().includes(q);
       const matchBrand = brand === "All" || c.brand === brand;
       const matchCategories = categories == "All" || c.categories?.includes(categories as any);
-      return matchSearch && matchBrand && matchCategories;
+      const matchFavourite = !showFavouritesOnly || favouriteIds.includes(c.id);
+
+      return matchSearch && matchBrand && matchCategories && matchFavourite;
+    
     });
 
     if (sortBy === "price-asc") list = [...list].sort((a, b) => a.trims[0].price - b.trims[0].price);
@@ -2647,7 +2651,7 @@ export default function App() {
     if (sortBy === "rating") list = [...list].sort((a, b) => b.rating - a.rating);
 
     return list;
-  }, [query, brand, categories, sortBy]);
+  }, [query, brand, categories,showFavouritesOnly,favouriteIds, sortBy, ]);
 
   const detailCar = detailCarId ? CARS.find((c) => c.id === detailCarId) ?? null : null;
   const compareCars = CARS.filter((c) => compareIds.includes(c.id));
@@ -2919,6 +2923,18 @@ export default function App() {
               vehicles found
             </p>
             <div className="flex items-center gap-3">
+              <button
+  onClick={() => setShowFavouritesOnly((prev) => !prev)}
+  className={`flex items-center gap-1.5 px-3 py-2 text-xs border rounded transition-all duration-200 ${
+    showFavouritesOnly
+      ? "bg-red-500/20 border-red-400 text-red-400"
+      : "bg-card border-border text-muted-foreground hover:border-red-400 hover:text-red-400"
+  }`}
+  style={{ fontFamily: "'JetBrains Mono', monospace" }}
+>
+  <Heart size={13} className={showFavouritesOnly ? "fill-current" : ""} />
+  My Favorites ({favouriteIds.length})
+</button>
               {/* Sort */}
               <div className="relative">
                 <select
@@ -2957,7 +2973,11 @@ export default function App() {
           {filtered.length === 0 ? (
             <div className="text-center py-20 text-muted-foreground">
               <Search size={36} className="mx-auto mb-4 opacity-30" />
-              <p className="text-sm">No vehicles match your search.</p>
+              <p className="text-sm">
+  {showFavouritesOnly
+    ? "No saved vehicles yet. Click the heart icon to save a car."
+    : "No vehicles match your search."}
+</p>
             </div>
           ) : viewMode === "grid" ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -2969,8 +2989,8 @@ export default function App() {
                   onTrimChange={(i) => setTrimIdx(car.id, i)}
                   inCompare={compareIds.includes(car.id)}
                   onCompareToggle={() => toggleCompare(car.id)}
-                  isFavorite ={favouriteIds.includes(car.id)}
-                  onFavoriteToggle={() => toggleFavorite(car.id)}
+                  isFavourite ={favouriteIds.includes(car.id)}
+                  onFavouriteToggle={() => toggleFavourite(car.id)}
                   onViewDetails={() => setDetailCarId(car.id)}
                   listView={false}
                   costInputs={costInputs}
@@ -2987,8 +3007,8 @@ export default function App() {
                   onTrimChange={(i) => setTrimIdx(car.id, i)}
                   inCompare={compareIds.includes(car.id)}
                   onCompareToggle={() => toggleCompare(car.id)}
-                  isFavorite={favouriteIds.includes(car.id)}
-                  onFavoriteToggle={() => toggleFavorite(car.id)}
+                  isFavourite={favouriteIds.includes(car.id)}
+                  onFavouriteToggle={() => toggleFavourite(car.id)}
                   onViewDetails={() => setDetailCarId(car.id)}
                   listView={true}
                   costInputs={costInputs}
